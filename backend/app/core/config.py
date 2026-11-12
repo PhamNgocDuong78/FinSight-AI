@@ -66,8 +66,10 @@ class Settings(BaseSettings):
     hybrid_search_top_k: int = Field(default=20)
     rerank_top_k: int = Field(default=5)
     max_agent_retries: int = Field(default=2)
-    parent_chunk_size: int = Field(default=1200)
+    parent_chunk_size: int = Field(default=1000)
+    parent_chunk_overlap: int = Field(default=100)
     child_chunk_size: int = Field(default=300)
+    child_chunk_overlap: int = Field(default=50)
 
     # 7. Storage Paths
     raw_pdf_dir: Path = Field(default=PROJECT_ROOT / "data" / "raw_pdfs")

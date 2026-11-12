@@ -1,6 +1,10 @@
-"""Pydantic v2 schemas for multimodal document parsing and table extraction."""
+"""Pydantic v2 schemas for multimodal document parsing, table extraction, and chunking."""
+
+import uuid
 
 from pydantic import BaseModel, Field
+
+from app.models.enums import ChunkType
 
 
 class ExtractedTable(BaseModel):
@@ -91,3 +95,138 @@ class ParsedDocument(BaseModel):
             sections.append(page.markdown.strip())
             sections.append("")
         return "\n".join(sections).strip() + "\n"
+
+
+class ParentChunkData(BaseModel):
+    """Full-context parent chunk (~1000 tokens of text or an entire unsplit Markdown table)."""
+
+    id: uuid.UUID = Field(
+        default_factory=uuid.uuid4,
+        description="Unique UUID for the parent chunk.",
+    )
+    document_id: uuid.UUID = Field(
+        description="UUID of the source document.",
+    )
+    page_number: int = Field(
+        ge=1,
+        description="1-based page number where the parent chunk originates.",
+    )
+    chunk_type: ChunkType = Field(
+        default=ChunkType.TEXT,
+        description="Type of parent chunk (text, table, or chart_summary).",
+    )
+    content_markdown: str = Field(
+        description="Full Markdown content (complete table or narrative text passage).",
+    )
+    section_title: str | None = Field(
+        default=None,
+        description="Nearest section heading or table title.",
+    )
+    token_count: int = Field(
+        ge=0,
+        description="Estimated token count of content_markdown.",
+    )
+
+
+class ChildChunkData(BaseModel):
+    """Search-optimized child chunk (~300 tokens or table title + key metrics) linked to a parent chunk."""
+
+    id: uuid.UUID = Field(
+        default_factory=uuid.uuid4,
+        description="Unique UUID for the child chunk point in Qdrant.",
+    )
+    parent_chunk_id: uuid.UUID = Field(
+        description="UUID referencing the parent chunk in PostgreSQL.",
+    )
+    document_id: uuid.UUID = Field(
+        description="UUID of the source document.",
+    )
+    page_number: int = Field(
+        ge=1,
+        description="1-based page number.",
+    )
+    chunk_type: ChunkType = Field(
+        default=ChunkType.TEXT,
+        description="Chunk type matching its parent chunk.",
+    )
+    chunk_index: int = Field(
+        ge=0,
+        default=0,
+        description="0-based index of this child chunk within its parent chunk.",
+    )
+    section_title: str | None = Field(
+        default=None,
+        description="Section heading or table title associated with this chunk.",
+    )
+    text: str = Field(
+        description="Searchable text (~300 tokens for narrative text, or table title + key metrics).",
+    )
+    token_count: int = Field(
+        ge=0,
+        description="Estimated token count of the child chunk text.",
+    )
+    key_metrics: list[str] = Field(
+        default_factory=list,
+        description="Extracted metric line items (chỉ tiêu chính) when chunk_type is table.",
+    )
+
+    def to_qdrant_payload(
+        self,
+        *,
+        doc_title: str = "",
+        ticker: str = "",
+        fiscal_year: int = 0,
+        period: str = "FY",
+        access_level: str = "public",
+    ) -> dict[str, object]:
+        """Serialize child chunk into the Qdrant payload structure defined in ARCHITECTURE.md."""
+        return {
+            "document_id": str(self.document_id),
+            "parent_chunk_id": str(self.parent_chunk_id),
+            "doc_title": doc_title,
+            "ticker": ticker,
+            "fiscal_year": fiscal_year,
+            "period": period,
+            "access_level": access_level,
+            "page_number": self.page_number,
+            "chunk_type": self.chunk_type.value,
+            "section_title": self.section_title or "",
+            "text": self.text,
+        }
+
+
+class ChunkingResult(BaseModel):
+    """Unified output of the Parent-Child chunking pipeline for a parsed document."""
+
+    document_id: uuid.UUID = Field(description="UUID of the chunked document.")
+    file_name: str = Field(description="Source filename of the chunked document.")
+    parent_chunks: list[ParentChunkData] = Field(
+        default_factory=list,
+        description="Ordered list of parent chunks to persist in PostgreSQL.",
+    )
+    child_chunks: list[ChildChunkData] = Field(
+        default_factory=list,
+        description="Ordered list of child chunks to index in Qdrant.",
+    )
+
+    @property
+    def total_parents(self) -> int:
+        """Return total number of parent chunks."""
+        return len(self.parent_chunks)
+
+    @property
+    def total_children(self) -> int:
+        """Return total number of child chunks."""
+        return len(self.child_chunks)
+
+    @property
+    def table_parent_chunks(self) -> list[ParentChunkData]:
+        """Return only parent chunks of type TABLE."""
+        return [c for c in self.parent_chunks if c.chunk_type == ChunkType.TABLE]
+
+    @property
+    def text_parent_chunks(self) -> list[ParentChunkData]:
+        """Return only parent chunks of type TEXT."""
+        return [c for c in self.parent_chunks if c.chunk_type == ChunkType.TEXT]
+
+
