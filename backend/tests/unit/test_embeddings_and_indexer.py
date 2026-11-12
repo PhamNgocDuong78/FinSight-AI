@@ -136,3 +136,4 @@ def test_document_upload_params_and_filename_sanitization() -> None:
 
     with pytest.raises(ValueError):
         DocumentUploadParams(ticker="   ", fiscal_year=2024)
+

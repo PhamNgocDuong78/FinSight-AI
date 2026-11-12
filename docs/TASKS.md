@@ -59,7 +59,7 @@ Tài liệu này chia dự án thành **7 Giai đoạn (Phases)** từ cơ bản
 
 ## Giai đoạn 2: Xây dựng Hệ thống Truy xuất Lai & Phân quyền (Hybrid Retrieval & RBAC)
 
-- [ ] **Task 2.1: Bộ truy xuất Hybrid Search (Dense + BM25) tích hợp Bộ lọc RBAC**
+- [x] **Task 2.1: Bộ truy xuất Hybrid Search (Dense + BM25) tích hợp Bộ lọc RBAC**
   - **Mục tiêu:** Viết `app/services/retrieval/hybrid_retriever.py` kết hợp tìm kiếm ngữ nghĩa và từ khóa bằng RRF (Reciprocal Rank Fusion), tự động lọc theo `access_level` của người dùng, `ticker` và `fiscal_year`, sau đó map ngược từ Child Chunk sang Parent Chunk để lấy đầy đủ bảng/ngữ cảnh.
   - **Tiêu chí nghiệm thu:** Test chứng minh: (1) User có role `viewer` không thể truy xuất tài liệu `internal_finance`; (2) Truy vấn chứa mã chỉ tiêu hoặc năm cụ thể lấy đúng bảng ở trang tương ứng.
   - **Prompt mẫu:**

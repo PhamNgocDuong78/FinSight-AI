@@ -90,6 +90,13 @@ class QdrantChildChunkIndexer(BaseVectorIndexer):
         client = self._get_client()
         exists = await client.collection_exists(self.collection_name)
 
+        if exists and not recreate:
+            info = await client.get_collection(self.collection_name)
+            sparse_cfg = info.config.params.sparse_vectors or {}
+            sparse_param = sparse_cfg.get(SPARSE_VECTOR_NAME) if isinstance(sparse_cfg, dict) else None
+            if sparse_param is not None and sparse_param.modifier == models.Modifier.IDF:
+                recreate = True
+
         if exists and recreate:
             await client.delete_collection(self.collection_name)
             exists = False
@@ -105,9 +112,7 @@ class QdrantChildChunkIndexer(BaseVectorIndexer):
                     )
                 },
                 sparse_vectors_config={
-                    SPARSE_VECTOR_NAME: models.SparseVectorParams(
-                        modifier=models.Modifier.IDF,
-                    )
+                    SPARSE_VECTOR_NAME: models.SparseVectorParams()
                 },
             )
             created = True
@@ -115,7 +120,7 @@ class QdrantChildChunkIndexer(BaseVectorIndexer):
                 "qdrant_collection_created",
                 collection_name=self.collection_name,
                 dense_dim=self.embedding_dimension,
-                sparse_modifier="idf",
+                sparse_scoring="bm25_dot",
             )
 
         for field_name, schema_type in _PAYLOAD_INDEX_FIELDS:
