@@ -15,7 +15,7 @@ Tài liệu này chia dự án thành **7 Giai đoạn (Phases)** từ cơ bản
   - **Prompt mẫu:**
     > "Hãy đọc `AGENTS.md` và `docs/ARCHITECTURE.md`. Thực hiện **Task 0.1**: Tạo `docker-compose.yml` cho PostgreSQL 16, Qdrant, Redis kèm healthcheck, tạo `.env.example` và `.gitignore` chuẩn cho Python + Next.js."
 
-- [ ] **Task 0.2: Dựng khung Backend FastAPI & Kết nối Cơ sở dữ liệu**
+- [x] **Task 0.2: Dựng khung Backend FastAPI & Kết nối Cơ sở dữ liệu**
   - **Mục tiêu:** Khởi tạo thư mục `backend/`, `pyproject.toml`, cấu hình `app/core/config.py` (Pydantic Settings), kết nối SQLAlchemy Async + Qdrant Client + endpoint `/api/v1/health`.
   - **Tiêu chí nghiệm thu:** Chạy server FastAPI và viết `tests/integration/test_health.py` kiểm tra kết nối thật tới Postgres, Qdrant, Redis đều trả về `ok`.
   - **Prompt mẫu:**
