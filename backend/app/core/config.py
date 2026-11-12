@@ -65,6 +65,11 @@ class Settings(BaseSettings):
     # 6. Retrieval & Agentic Workflow Configuration
     hybrid_search_top_k: int = Field(default=20)
     rerank_top_k: int = Field(default=5)
+    reranker_provider: Literal["auto", "gemini", "cross_encoder", "lexical_cross"] = Field(
+        default="auto"
+    )
+    reranker_model: str = Field(default="gemini-3.5-flash-lite")
+    cross_encoder_model_name: str = Field(default="BAAI/bge-reranker-base")
     max_agent_retries: int = Field(default=2)
     parent_chunk_size: int = Field(default=1000)
     parent_chunk_overlap: int = Field(default=100)

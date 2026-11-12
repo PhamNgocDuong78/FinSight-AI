@@ -237,12 +237,82 @@ class RetrievedChunk(BaseModel):
         }
 
 
+class RerankCandidateScore(BaseModel):
+    """Structured relevance score for a single candidate chunk from Gemini Flash-Lite reranker."""
+
+    candidate_index: int = Field(ge=0, description="0-based index in the candidate list.")
+    relevance_score: float = Field(ge=0.0, le=1.0, description="Relevance score in [0.0, 1.0].")
+    rationale: str = Field(default="", description="Short justification for the assigned score.")
+
+
+class RerankBatchOutput(BaseModel):
+    """Structured JSON output schema for batch LLM Cross-Attention reranking."""
+
+    scores: list[RerankCandidateScore] = Field(
+        default_factory=list,
+        description="List of relevance scores for evaluated candidate chunks.",
+    )
+
+
+class RerankRankChange(BaseModel):
+    """Before-and-after ranking telemetry for a single chunk after Cross-Encoder reranking."""
+
+    parent_chunk_id: uuid.UUID = Field(description="Parent Chunk UUID.")
+    ticker: str = Field(description="Company stock ticker.")
+    fiscal_year: int = Field(description="Fiscal year.")
+    page_number: int = Field(ge=1, description="1-based PDF page number.")
+    section_title: str | None = Field(default=None, description="Section or table title.")
+    rank_before: int = Field(ge=1, description="1-based rank from Hybrid RRF before reranking.")
+    rank_after: int = Field(ge=1, description="1-based rank after Cross-Encoder reranking.")
+    rank_delta: int = Field(
+        description="Rank improvement (rank_before - rank_after). Positive = promoted higher."
+    )
+    rrf_score: float = Field(ge=0.0, description="Initial Hybrid RRF score.")
+    rerank_score: float = Field(ge=0.0, le=1.0, description="Cross-Encoder relevance score.")
+
+
+class RerankComparisonReport(BaseModel):
+    """Comprehensive comparison report of retrieval quality before vs. after reranking."""
+
+    query: str = Field(description="Original search query.")
+    reranker_model: str = Field(description="Identifier of the reranker model used.")
+    input_count: int = Field(ge=0, description="Number of Hybrid RRF candidates before rerank.")
+    output_count: int = Field(ge=0, description="Number of Top-K chunks retained after rerank.")
+    top_1_changed: bool = Field(
+        default=False,
+        description="True if reranking promoted a different chunk to Rank 1.",
+    )
+    top_1_before_id: uuid.UUID | None = Field(default=None, description="Rank 1 UUID before rerank.")
+    top_1_after_id: uuid.UUID | None = Field(default=None, description="Rank 1 UUID after rerank.")
+    mean_rrf_score_before: float = Field(
+        default=0.0,
+        description="Mean RRF score of the initial Top-K candidates before reranking.",
+    )
+    mean_rerank_score_after: float = Field(
+        default=0.0,
+        description="Mean Cross-Encoder relevance score of the retained Top-K chunks.",
+    )
+    rank_changes: list[RerankRankChange] = Field(
+        default_factory=list,
+        description="Per-chunk rank transition details for the retained Top-K chunks.",
+    )
+    results: list[RetrievedChunk] = Field(
+        default_factory=list,
+        description="Final reranked Top-K RetrievedChunk objects with `rerank_score` populated.",
+    )
+
+
 __all__ = [
     "ROLE_ACCESS_MATRIX",
     "ChildChunkMatch",
+    "RerankBatchOutput",
+    "RerankCandidateScore",
+    "RerankComparisonReport",
+    "RerankRankChange",
     "RetrievalFilter",
     "RetrievedChunk",
     "parse_access_level",
     "parse_user_role",
     "resolve_allowed_access_levels",
 ]
+

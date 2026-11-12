@@ -65,7 +65,7 @@ Tài liệu này chia dự án thành **7 Giai đoạn (Phases)** từ cơ bản
   - **Prompt mẫu:**
     > "Đọc `AGENTS.md` và `docs/ARCHITECTURE.md`. Thực hiện **Task 2.1**: Viết `app/services/retrieval/hybrid_retriever.py` thực hiện Hybrid Search trên Qdrant: kết hợp Dense Vector và Sparse BM25 bằng thuật toán RRF. Tích hợp bộ lọc Payload theo `access_level` (RBAC), `ticker` và `fiscal_year`. Lấy danh sách Child Chunks trúng khớp rồi truy vấn PostgreSQL để lấy `Parent Chunk` đầy đủ. Viết test kiểm tra bảo mật phân quyền RBAC."
 
-- [ ] **Task 2.2: Tích hợp Bộ xếp hạng lại (Reranker)**
+- [x] **Task 2.2: Tích hợp Bộ xếp hạng lại (Reranker)**
   - **Mục tiêu:** Viết `app/services/retrieval/reranker.py` chấm điểm lại Top-20 ứng viên từ Hybrid Search xuống Top-5 đoạn ngữ cảnh sát câu hỏi nhất.
   - **Tiêu chí nghiệm thu:** Có log/số liệu so sánh thứ hạng kết quả trước và sau khi Rerank.
   - **Prompt mẫu:**

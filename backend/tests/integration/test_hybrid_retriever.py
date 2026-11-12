@@ -311,3 +311,4 @@ async def test_hybrid_retriever_rbac_security_and_table_parent_mapping(
         stem = sample_pdf.stem
         (settings.processed_md_dir / f"{stem}.md").unlink(missing_ok=True)
         (settings.processed_md_dir / f"{stem}.json").unlink(missing_ok=True)
+

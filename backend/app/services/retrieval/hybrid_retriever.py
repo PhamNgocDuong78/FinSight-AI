@@ -460,3 +460,4 @@ class QdrantHybridRetriever(BaseHybridRetriever):
             parent_chunks_returned=len(results),
         )
         return results
+
