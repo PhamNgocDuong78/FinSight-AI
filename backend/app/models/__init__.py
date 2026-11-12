@@ -10,6 +10,8 @@ from app.models.enums import (
     DocumentStatus,
     FiscalPeriod,
     MessageRole,
+    MetricCode,
+    MetricUnit,
     StatementType,
     UserRole,
 )
@@ -28,6 +30,8 @@ __all__ = [
     "FinancialMetric",
     "FiscalPeriod",
     "MessageRole",
+    "MetricCode",
+    "MetricUnit",
     "ParentChunk",
     "StatementType",
     "User",

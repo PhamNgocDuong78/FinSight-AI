@@ -9,19 +9,19 @@ Tài liệu này chia dự án thành **7 Giai đoạn (Phases)** từ cơ bản
 
 ## Giai đoạn 0: Khởi tạo Hạ tầng & Khung Dự án (Foundation Setup)
 
-- [ ] **Task 0.1: Khởi tạo Docker Compose & Cấu hình Môi trường**
+- [x] **Task 0.1: Khởi tạo Docker Compose & Cấu hình Môi trường**
   - **Mục tiêu:** Tạo `docker-compose.yml` (gồm PostgreSQL 16, Qdrant, Redis), `.env.example`, `.gitignore` và kiểm tra các container chạy ổn định.
   - **Tiêu chí nghiệm thu:** Chạy `docker compose up -d` thành công; kết nối được tới Postgres (port 5432), Qdrant Dashboard (port 6333/dashboard) và Redis (port 6379).
   - **Prompt mẫu:**
     > "Đọc `AGENTS.md` và `docs/ARCHITECTURE.md`. Thực hiện **Task 0.1**: Tạo `docker-compose.yml` cho PostgreSQL 16, Qdrant, Redis kèm healthcheck và persistent volume; tạo file `.env.example` với đầy đủ các biến cấu hình cần thiết; tạo `.gitignore` chuẩn cho Python + Next.js (chặn tuyệt đối `.env`, thư mục data nặng và cache)."
 
-- [ ] **Task 0.2: Dựng khung Backend FastAPI & Kết nối Cơ sở dữ liệu**
+- [x] **Task 0.2: Dựng khung Backend FastAPI & Kết nối Cơ sở dữ liệu**
   - **Mục tiêu:** Khởi tạo thư mục `backend/`, `pyproject.toml`, cấu hình `app/core/config.py` (Pydantic Settings), kết nối SQLAlchemy Async + Qdrant Client + Redis Client + endpoint `/api/v1/health`.
   - **Tiêu chí nghiệm thu:** Chạy server FastAPI và viết `tests/integration/test_health.py` kiểm tra kết nối thật tới Postgres, Qdrant, Redis đều trả về status `ok`.
   - **Prompt mẫu:**
     > "Đọc `AGENTS.md` và `docs/ARCHITECTURE.md`. Thực hiện **Task 0.2**: Khởi tạo khung thư mục `backend/`, file `pyproject.toml` (dùng uv/pip), cấu hình `app/core/config.py` đọc biến môi trường từ `.env`. Cài đặt kết nối async tới PostgreSQL, Qdrant và Redis. Tạo endpoint `GET /api/v1/health` và viết test `tests/integration/test_health.py` kiểm tra kết nối thực tế."
 
-- [ ] **Task 0.3: Thiết kế ORM Models & Database Migration (Alembic)**
+- [x] **Task 0.3: Thiết kế ORM Models & Database Migration (Alembic)**
   - **Mục tiêu:** Tạo các bảng `users`, `documents`, `parent_chunks`, `financial_metrics`, `chat_sessions`, `chat_messages` đúng như thiết kế trong `docs/ARCHITECTURE.md`.
   - **Tiêu chí nghiệm thu:** Chạy `alembic upgrade head` tạo bảng thành công trong PostgreSQL; có script seed sẵn 3 tài khoản mẫu ứng với 3 role (`admin`, `analyst`, `viewer`).
   - **Prompt mẫu:**
@@ -31,19 +31,19 @@ Tài liệu này chia dự án thành **7 Giai đoạn (Phases)** từ cơ bản
 
 ## Giai đoạn 1: Xây dựng Pipeline Nạp Tài liệu Đa phương thức & ETL (Ingestion & ETL)
 
-- [ ] **Task 1.1: Xây dựng Bộ bóc tách PDF giữ nguyên cấu trúc Bảng (Layout-aware Parser)**
+- [x] **Task 1.1: Xây dựng Bộ bóc tách PDF giữ nguyên cấu trúc Bảng (Layout-aware Parser)**
   - **Mục tiêu:** Viết module `app/services/ingestion/pdf_parser.py` đọc file PDF báo cáo tài chính, trích xuất văn bản theo từng trang và chuyển các bảng số liệu thành định dạng Markdown chuẩn (không bị lệch cột).
   - **Tiêu chí nghiệm thu:** Thử nghiệm với 1 file PDF báo cáo tài chính thật trong `data/raw_pdfs/`, xuất kết quả ra `data/processed_md/` và kiểm tra bảng cân đối kế toán/kết quả kinh doanh giữ nguyên hàng cột.
   - **Prompt mẫu:**
     > "Đọc `AGENTS.md` và `docs/ARCHITECTURE.md`. Thực hiện **Task 1.1**: Xây dựng `app/services/ingestion/pdf_parser.py` sử dụng thư viện xử lý PDF (Docling hoặc PyMuPDF4LLM) có khả năng bóc tách văn bản theo trang và giữ nguyên cấu trúc bảng biểu sang Markdown. Viết unit test `tests/unit/test_pdf_parser.py` và script kiểm tra trên file PDF mẫu trong `data/raw_pdfs/`."
 
-- [ ] **Task 1.2: Chiến lược Parent-Child Chunking cho Văn bản & Bảng Tài chính**
+- [x] **Task 1.2: Chiến lược Parent-Child Chunking cho Văn bản & Bảng Tài chính**
   - **Mục tiêu:** Viết `app/services/ingestion/chunker.py`. Với bảng biểu: giữ nguyên cả bảng làm `Parent Chunk`, đồng thời tạo `Child Chunk` chứa tiêu đề bảng + các chỉ tiêu chính để tìm kiếm không bị cắt đôi bảng. Với văn bản: chia Parent (~1000 tokens) và Child (~300 tokens).
   - **Tiêu chí nghiệm thu:** Unit test `tests/unit/test_chunker.py` chứng minh không có bảng Markdown nào bị cắt gãy giữa chừng ở tầng Parent Chunk và mọi Child Chunk đều trỏ đúng `parent_chunk_id`.
   - **Prompt mẫu:**
     > "Đọc `AGENTS.md` và `docs/ARCHITECTURE.md`. Thực hiện **Task 1.2**: Viết `app/services/ingestion/chunker.py` triển khai chiến lược Parent-Child Chunking chuyên biệt cho tài chính: (1) Với bảng Markdown: giữ nguyên cả bảng làm Parent Chunk, trích xuất dòng tiêu đề + các mục chính làm Child Chunk; (2) Với văn bản: tách Parent Chunk ~1000 tokens và Child Chunk ~300 tokens có overlap. Viết unit test `tests/unit/test_chunker.py` xác minh liên kết giữa parent và child."
 
-- [ ] **Task 1.3: Trích xuất Chỉ số Tài chính Có cấu trúc vào PostgreSQL (Financial ETL)**
+- [x] **Task 1.3: Trích xuất Chỉ số Tài chính Có cấu trúc vào PostgreSQL (Financial ETL)**
   - **Mục tiêu:** Viết `app/services/ingestion/financial_etl.py` sử dụng Structured Output của LLM (Pydantic Schema) kết hợp quy tắc kiểm tra để rút trích các chỉ số cốt lõi (`REVENUE`, `GROSS_PROFIT`, `NET_INCOME`, `TOTAL_ASSETS`, `TOTAL_EQUITY`, `ROE`, `ROA`, `EPS`) từ các bảng tài chính vào bảng `financial_metrics`.
   - **Tiêu chí nghiệm thu:** Sau khi nạp báo cáo PDF, bảng `financial_metrics` trong PostgreSQL có đầy đủ các dòng chỉ số chuẩn kèm `source_page` chính xác.
   - **Prompt mẫu:**
