@@ -24,15 +24,27 @@ from app.services.ingestion.pdf_parser import (
     export_parsed_document,
     rows_to_markdown_table,
 )
+from app.services.ingestion.pipeline import DocumentIngestionPipeline
+from app.services.ingestion.vector_indexer import (
+    DENSE_VECTOR_NAME,
+    SPARSE_VECTOR_NAME,
+    BaseVectorIndexer,
+    QdrantChildChunkIndexer,
+)
 
 __all__ = [
+    "DENSE_VECTOR_NAME",
+    "SPARSE_VECTOR_NAME",
     "BaseDocumentChunker",
     "BaseDocumentParser",
     "BaseFinancialExtractor",
+    "BaseVectorIndexer",
+    "DocumentIngestionPipeline",
     "FinancialETLService",
     "GeminiStructuredFinancialExtractor",
     "LayoutAwarePDFParser",
     "ParentChildChunker",
+    "QdrantChildChunkIndexer",
     "classify_metric_row",
     "clean_table_cell",
     "count_tokens",

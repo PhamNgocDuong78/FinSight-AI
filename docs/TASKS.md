@@ -49,7 +49,7 @@ Tài liệu này chia dự án thành **7 Giai đoạn (Phases)** từ cơ bản
   - **Prompt mẫu:**
     > "Đọc `AGENTS.md` và `docs/ARCHITECTURE.md`. Thực hiện **Task 1.3**: Xây dựng `app/services/ingestion/financial_etl.py` sử dụng Google GenAI SDK (`google-genai`) với tính năng Structured Output (Pydantic model) để bóc tách các chỉ số tài chính chuẩn hóa (`REVENUE`, `NET_INCOME`, `TOTAL_ASSETS`, `TOTAL_EQUITY`, `EPS`...) từ bảng Markdown và lưu vào bảng `financial_metrics` trong PostgreSQL. Viết test kiểm tra độ chính xác của số liệu bóc tách."
 
-- [ ] **Task 1.4: Lập chỉ mục Dual Indexing (Dense + Sparse BM25) vào Qdrant & API Upload**
+- [x] **Task 1.4: Lập chỉ mục Dual Indexing (Dense + Sparse BM25) vào Qdrant & API Upload**
   - **Mục tiêu:** Tạo collection `finsight_child_chunks` trên Qdrant hỗ trợ cả Dense Vector (Embedding) và Sparse Vector (BM25), gắn đầy đủ Payload (`ticker`, `fiscal_year`, `access_level`, `page_number`). Hoàn thiện API `POST /api/v1/documents/upload`.
   - **Tiêu chí nghiệm thu:** Upload 1 file PDF qua API -> lưu Parent Chunks + Financial Metrics vào Postgres và Child Chunks vào Qdrant thành công.
   - **Prompt mẫu:**
