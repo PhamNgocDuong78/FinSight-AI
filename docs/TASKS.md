@@ -75,7 +75,7 @@ Tài liệu này chia dự án thành **7 Giai đoạn (Phases)** từ cơ bản
 
 ## Giai đoạn 3: Công cụ Truy vấn Số liệu & Tính toán Tài chính (Text-to-SQL & Financial Tools)
 
-- [ ] **Task 3.1: Công cụ Truy vấn Chỉ số Tài chính (Structured SQL Query Tool)**
+- [x] **Task 3.1: Công cụ Truy vấn Chỉ số Tài chính (Structured SQL Query Tool)**
   - **Mục tiêu:** Viết `app/agents/tools/sql_tool.py` cho phép chuyển câu hỏi định lượng (ví dụ: *"Doanh thu và lợi nhuận sau thuế của FPT từ 2022 đến 2024"*) thành truy vấn an toàn (Read-only) trên bảng `financial_metrics` kèm kiểm tra phân quyền.
   - **Tiêu chí nghiệm thu:** Chỉ cho phép câu lệnh `SELECT` hợp lệ hoặc truy vấn qua bộ lọc tham số hóa; trả về đúng con số, đơn vị tính và số trang trích dẫn (`source_page`).
   - **Prompt mẫu:**

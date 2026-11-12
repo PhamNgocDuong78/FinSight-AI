@@ -147,3 +147,4 @@ async def test_hybrid_retrieve_and_rerank_promotes_full_parent_table_over_child_
             if doc_obj is not None:
                 await session.delete(doc_obj)
                 await session.commit()
+
