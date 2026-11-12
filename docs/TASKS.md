@@ -21,7 +21,7 @@ Tài liệu này chia dự án thành **7 Giai đoạn (Phases)** từ cơ bản
   - **Prompt mẫu:**
     > "Đọc `AGENTS.md` và `docs/ARCHITECTURE.md`. Thực hiện **Task 0.2**: Khởi tạo khung `backend/` với FastAPI, `pyproject.toml`, `app/core/config.py`, kết nối async tới PostgreSQL, Qdrant, Redis và viết test kiểm tra `/api/v1/health`."
 
-- [ ] **Task 0.3: Thiết kế ORM Models & Database Migration (Alembic)**
+- [x] **Task 0.3: Thiết kế ORM Models & Database Migration (Alembic)**
   - **Mục tiêu:** Tạo các bảng `users`, `documents`, `parent_chunks`, `financial_metrics`, `chat_sessions`, `chat_messages` đúng như thiết kế trong `docs/ARCHITECTURE.md`.
   - **Tiêu chí nghiệm thu:** Chạy `alembic upgrade head` tạo bảng thành công trong PostgreSQL; có script seed sẵn 3 tài khoản mẫu ứng với 3 role (`admin`, `analyst`, `viewer`).
 
