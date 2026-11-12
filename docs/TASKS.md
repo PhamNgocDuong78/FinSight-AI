@@ -29,7 +29,7 @@ Tài liệu này chia dự án thành **7 Giai đoạn (Phases)** từ cơ bản
 
 ## Giai đoạn 1: Xây dựng Pipeline Nạp Tài liệu Đa phương thức & ETL (Ingestion & ETL)
 
-- [ ] **Task 1.1: Xây dựng Bộ bóc tách PDF giữ nguyên cấu trúc Bảng (Layout-aware Parser)**
+- [x] **Task 1.1: Xây dựng Bộ bóc tách PDF giữ nguyên cấu trúc Bảng (Layout-aware Parser)**
   - **Mục tiêu:** Viết module `app/services/ingestion/pdf_parser.py` đọc file PDF báo cáo tài chính, trích xuất văn bản theo từng trang và chuyển các bảng số liệu thành định dạng Markdown chuẩn (không bị lệch cột).
   - **Tiêu chí nghiệm thu:** Thử nghiệm với 1 file PDF báo cáo tài chính thật trong `data/raw_pdfs/`, xuất kết quả ra `data/processed_md/` và kiểm tra bảng cân đối kế toán/kết quả kinh doanh giữ nguyên hàng cột.
   - **Prompt mẫu:**

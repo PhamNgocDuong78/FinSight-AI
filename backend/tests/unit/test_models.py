@@ -42,3 +42,4 @@ def test_financial_metrics_columns_and_types() -> None:
 def test_user_roles_enum() -> None:
     """Verify the 3 RBAC roles match specification."""
     assert {role.value for role in UserRole} == {"admin", "analyst", "viewer"}
+

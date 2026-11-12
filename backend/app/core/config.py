@@ -4,7 +4,7 @@ from functools import lru_cache
 from pathlib import Path
 from typing import Literal
 
-from pydantic import Field
+from pydantic import Field, field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 PROJECT_ROOT = Path(__file__).resolve().parents[3]
@@ -73,6 +73,14 @@ class Settings(BaseSettings):
     raw_pdf_dir: Path = Field(default=PROJECT_ROOT / "data" / "raw_pdfs")
     processed_md_dir: Path = Field(default=PROJECT_ROOT / "data" / "processed_md")
     eval_dataset_dir: Path = Field(default=PROJECT_ROOT / "data" / "eval_datasets")
+
+    @field_validator("raw_pdf_dir", "processed_md_dir", "eval_dataset_dir", mode="after")
+    @classmethod
+    def resolve_storage_path(cls, value: Path) -> Path:
+        """Anchor relative storage paths to PROJECT_ROOT."""
+        if not value.is_absolute():
+            return (PROJECT_ROOT / value).resolve()
+        return value
 
     # 8. Observability
     langfuse_enabled: bool = Field(default=False)

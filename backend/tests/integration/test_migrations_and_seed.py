@@ -58,3 +58,4 @@ async def test_seed_default_users_idempotent() -> None:
             UserRole.ANALYST.value,
             UserRole.VIEWER.value,
         }
+
