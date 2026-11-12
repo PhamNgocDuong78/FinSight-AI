@@ -87,3 +87,15 @@ Vì đây là **Đồ án Tốt nghiệp** và dùng để **Phỏng vấn xin v
   1. Ngay sau khi hoàn thành một Task trong `docs/TASKS.md` (đã kiểm thử và đánh dấu `[x]`), **bắt buộc** phải thực hiện `git add`, `git commit` và `git push` lên nhánh chính của GitHub.
   2. Sử dụng thông điệp commit rõ ràng theo chuẩn Conventional Commits (ví dụ: `feat: complete task 0.1 - docker compose and env setup`).
   3. Luôn kiểm tra `git status` trước khi commit để đảm bảo không đẩy nhầm file `.env`, API key hoặc file dữ liệu PDF nặng đã được loại trừ trong `.gitignore`.
+
+---
+
+## 7. Quy tắc Cập nhật Nhật ký Đồ án (.docx)
+
+- **File nhật ký chính thức:** `docs/THESIS_PROGRESS_LOG.docx`
+- **Quy trình bắt buộc sau mỗi Task:**
+  1. Ngay sau khi hoàn thành một Task trong `docs/TASKS.md` (trước khi `git commit` và `git push`), **bắt buộc** cập nhật thêm thông tin của Task đó vào `docs/THESIS_PROGRESS_LOG.docx` (sử dụng thư viện Python `python-docx`, đồng thời cập nhật thêm 1 dòng vào **Bảng Tổng Hợp Tiến Độ**).
+  2. Mỗi mục Task ghi vào `.docx` phải có đầy đủ **3 phần**:
+     - **Thông tin Task đã làm:** Mã Task, Tên Task, Giai đoạn, Ngày hoàn thành, Các file đã tạo/chỉnh sửa, Kết quả kiểm thử.
+     - **Công việc đã làm trong Task:** Mô tả chi tiết những thành phần/code/cấu hình đã xây dựng.
+     - **Vì sao phải làm điều đó:** Giải thích rõ lý do kỹ thuật, Design Trade-offs và giá trị mang lại cho hệ thống (phục vụ viết báo cáo tốt nghiệp và bảo vệ đồ án).
