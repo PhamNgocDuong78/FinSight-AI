@@ -81,7 +81,7 @@ Tài liệu này chia dự án thành **7 Giai đoạn (Phases)** từ cơ bản
   - **Prompt mẫu:**
     > "Đọc `AGENTS.md` và `docs/ARCHITECTURE.md`. Thực hiện **Task 3.1**: Xây dựng `app/agents/tools/sql_tool.py`. Tool này nhận câu hỏi định lượng, sinh truy vấn SQL an toàn (chỉ cho phép `SELECT`, ngăn ngừa SQL Injection) trên bảng `financial_metrics`, thực thi và trả về kết quả số liệu có cấu trúc kèm đơn vị tính và `source_page`. Viết test kiểm tra khả năng sinh SQL chính xác và cơ chế chống SQL Injection."
 
-- [ ] **Task 3.2: Công cụ Tính toán Tài chính Chính xác (Financial Calculator Tool)**
+- [x] **Task 3.2: Công cụ Tính toán Tài chính Chính xác (Financial Calculator Tool)**
   - **Mục tiêu:** Viết `app/agents/tools/calculator_tool.py` thực hiện các phép tính: Tăng trưởng YoY (%), CAGR, Biên lợi nhuận, Tỷ trọng cơ cấu... bằng Python chuẩn xác tuyệt đối.
   - **Tiêu chí nghiệm thu:** Unit test kiểm tra các phép tính tài chính trả về kết quả làm tròn chuẩn 2 chữ số thập phân, xử lý an toàn trường hợp chia cho 0.
   - **Prompt mẫu:**
